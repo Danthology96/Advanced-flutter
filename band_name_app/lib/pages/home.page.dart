@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          _showGraph(),
+          (bands.isNotEmpty) ? _showGraph() : const Text('No hay bandas'),
           Expanded(
             child: ListView.builder(
                 itemCount: bands.length,
