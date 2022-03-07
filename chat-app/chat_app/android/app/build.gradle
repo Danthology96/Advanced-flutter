@@ -44,7 +44,8 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.chat_app"
-        minSdkVersion flutter.minSdkVersion
+        // Established 18 as min version due to flutter_secure_storage package
+        minSdkVersion 18
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

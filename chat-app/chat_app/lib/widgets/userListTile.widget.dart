@@ -13,10 +13,10 @@ class UserListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(user.name),
+      title: Text(user.username),
       subtitle: Text(user.email),
       leading: CircleAvatar(
-        child: Text(user.name.substring(0, 2)),
+        child: Text(user.username.substring(0, 2)),
         backgroundColor: Colors.blue[200],
       ),
       trailing: Container(

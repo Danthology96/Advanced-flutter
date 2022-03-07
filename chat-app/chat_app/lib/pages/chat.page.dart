@@ -58,7 +58,6 @@ class _ChatPageState extends State<ChatPage> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      print(index.toString());
                       return _messages[index];
                     },
                     childCount: _messages.length,

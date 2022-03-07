@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../helpers/showAlert.helper.dart';
+import '../services/auth.service.dart';
 import '../widgets/customInputField.widget.dart';
 import '../widgets/labels.widget.dart';
 import '../widgets/loginButton.widget.dart';
@@ -62,6 +65,8 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -105,13 +110,50 @@ class __FormState extends State<_Form> {
           ),
           LoginButtonWidget(
             text: 'Ingresar',
-            onPressed: () {
-              print(emailController.text);
-              print(passwordController.text);
-              if (passwordController.text == confirmPasswordController.text) {
-                print('contraseña válida');
-              }
-            },
+            onPressed: authService.autenticating
+                ? null
+                : () async {
+                    /// para comprobar que todos los campos estén completos
+                    if (nameController.text.isEmpty ||
+                        emailController.text.isEmpty ||
+                        passwordController.text.isEmpty ||
+                        confirmPasswordController.text.isEmpty) {
+                      showAlert(
+                          context: context,
+                          title: 'Campos incompletos',
+                          subtitle: 'Ingrese todos los campos');
+                      return;
+                    }
+
+                    /// para comprobar la contraseña
+                    if (passwordController.text !=
+                        confirmPasswordController.text) {
+                      showAlert(
+                          context: context,
+                          title: 'Contraseñas no coinciden',
+                          subtitle: 'Las contraseñas no coinciden');
+                      return;
+                    }
+
+                    /// quita el foco de lo que sea, en este caso ayuda a quitar
+                    /// el teclado al dar el botón de ingresar
+                    FocusScope.of(context).unfocus();
+                    final registered = await authService.register(
+                      nameController.text.trim(),
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    );
+
+                    if (registered == true) {
+                      ///TODO: conectar al socket server
+                      Navigator.pushReplacementNamed(context, 'users');
+                    } else {
+                      showAlert(
+                          context: context,
+                          title: 'Registro incompleto',
+                          subtitle: registered);
+                    }
+                  },
           ),
         ],
       ),

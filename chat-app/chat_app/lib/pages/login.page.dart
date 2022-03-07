@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:chat_app/helpers/showAlert.helper.dart';
+import 'package:chat_app/services/auth.service.dart';
 
 import '../widgets/customInputField.widget.dart';
 import '../widgets/labels.widget.dart';
@@ -59,6 +63,8 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -83,12 +89,37 @@ class __FormState extends State<_Form> {
             height: 20,
           ),
           LoginButtonWidget(
-            text: 'Ingresar',
-            onPressed: () {
-              print(emailController.text);
-              print(passwordController.text);
-            },
-          ),
+              text: 'Ingresar',
+              onPressed: authService.autenticating
+                  ? null
+                  : () async {
+                      if (emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
+                        showAlert(
+                            context: context,
+                            title: 'Credenciales inválidas',
+                            subtitle: 'Ingrese todos los campos');
+                        return;
+                      }
+
+                      /// quita el foco de lo que sea, en este caso ayuda a quitar
+                      /// el teclado al dar el botón de ingresar
+                      FocusScope.of(context).unfocus();
+                      final logged = await authService.login(
+                        emailController.text.trim(),
+                        passwordController.text.trim(),
+                      );
+
+                      if (logged) {
+                        ///TODO: conectar al socket server
+                        Navigator.pushReplacementNamed(context, 'users');
+                      } else {
+                        showAlert(
+                            context: context,
+                            title: 'Credenciales inválidas',
+                            subtitle: 'Intente nuevamente');
+                      }
+                    }),
         ],
       ),
     );

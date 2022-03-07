@@ -7,7 +7,7 @@ class LoginButtonWidget extends StatelessWidget {
     required this.text,
   }) : super(key: key);
 
-  final Function() onPressed;
+  final Function()? onPressed;
   final String text;
 
   @override
