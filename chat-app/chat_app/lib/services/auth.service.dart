@@ -24,10 +24,10 @@ class AuthService with ChangeNotifier {
   }
 
   /// Getter del token de forma estática
-  static Future<String?> getToken() async {
+  static Future<String> getToken() async {
     const _storage = FlutterSecureStorage();
     final token = await _storage.read(key: 'token');
-    return token;
+    return token ?? '';
   }
 
   /// Getter del token de forma estática

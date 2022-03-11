@@ -1,4 +1,6 @@
+import 'package:chat_app/services/chat.service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/users.dart';
 
@@ -26,6 +28,11 @@ class UserListTile extends StatelessWidget {
             color: user.online ? Colors.green : Colors.red,
             borderRadius: BorderRadius.circular(100)),
       ),
+      onTap: () {
+        final chatService = Provider.of<ChatService>(context, listen: false);
+        chatService.receiverUser = user;
+        Navigator.pushNamed(context, 'chat');
+      },
     );
   }
 }

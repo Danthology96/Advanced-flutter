@@ -1,3 +1,4 @@
+import 'package:chat_app/services/socket.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -64,6 +65,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: const EdgeInsets.only(top: 20),
@@ -111,7 +113,7 @@ class __FormState extends State<_Form> {
                       );
 
                       if (logged) {
-                        ///TODO: conectar al socket server
+                        socketService.connect();
                         Navigator.pushReplacementNamed(context, 'users');
                       } else {
                         showAlert(

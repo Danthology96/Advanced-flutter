@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../helpers/showAlert.helper.dart';
 import '../services/auth.service.dart';
+import '../services/socket.service.dart';
 import '../widgets/customInputField.widget.dart';
 import '../widgets/labels.widget.dart';
 import '../widgets/loginButton.widget.dart';
@@ -66,6 +67,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: const EdgeInsets.only(top: 20),
@@ -145,7 +147,7 @@ class __FormState extends State<_Form> {
                     );
 
                     if (registered == true) {
-                      ///TODO: conectar al socket server
+                      socketService.connect();
                       Navigator.pushReplacementNamed(context, 'users');
                     } else {
                       showAlert(
