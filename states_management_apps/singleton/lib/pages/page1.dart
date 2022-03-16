@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:singleton/services/users.service.dart';
+
+import '../models/user.model.dart';
 
 class Page1Page extends StatelessWidget {
   const Page1Page({Key? key}) : super(key: key);
@@ -9,7 +12,14 @@ class Page1Page extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Page 1'),
       ),
-      body: const UserInformation(),
+      body: StreamBuilder(
+        stream: userService.userStream,
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          return snapshot.hasData
+              ? UserInformation(user: snapshot.data)
+              : const Center(child: Text('No existe información del usuario'));
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, 'page2'),
         child: const Icon(Icons.next_plan),
@@ -21,8 +31,10 @@ class Page1Page extends StatelessWidget {
 class UserInformation extends StatelessWidget {
   const UserInformation({
     Key? key,
+    required this.user,
   }) : super(key: key);
 
+  final User? user;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,23 +43,23 @@ class UserInformation extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
+        children: [
+          const Text(
             'General',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            title: Text('Name:'),
+            title: Text('Name: ${user?.name ?? ''}'),
           ),
           ListTile(
-            title: Text('Age:'),
+            title: Text('Age: ${user?.age ?? ''}'),
           ),
-          Text(
+          const Text(
             'Proffesions',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          ListTile(
+          const ListTile(
             title: Text('profesion1'),
           ),
         ],
