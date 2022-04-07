@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maps_app/blocs/blocs.dart';
-import 'package:maps_app/ui/custom_snackbar.ui.dart';
+import 'package:maps_app/ui/ui.dart';
 
 class ButtonCurrentLocation extends StatelessWidget {
   const ButtonCurrentLocation({Key? key}) : super(key: key);
@@ -25,10 +25,6 @@ class ButtonCurrentLocation extends StatelessWidget {
                     .showSnackBar(CustomSnackbar(message: 'No location found'));
                 return;
               }
-              ;
-
-              ///TODO: Show snackbar
-
               mapBloc.moveCamera(userLocation);
             },
             icon: const Icon(Icons.my_location_outlined),

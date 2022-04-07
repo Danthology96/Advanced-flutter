@@ -12,3 +12,15 @@ class OnMapInitializedEvent extends MapEvent {
 
   const OnMapInitializedEvent(this.mapController);
 }
+
+class OnStartFollowingUser extends MapEvent {}
+
+class OnStopFollowingUser extends MapEvent {}
+
+class UpdateUserPolylineEvent extends MapEvent {
+  final List<LatLng> locationHistory;
+
+  const UpdateUserPolylineEvent(this.locationHistory);
+}
+
+class OnToggleUserRoute extends MapEvent {}

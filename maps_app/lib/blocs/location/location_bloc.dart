@@ -39,7 +39,6 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   void stopFollowingUser() {
     positionStream?.cancel();
     add(OnStopFollowingUserEvent());
-    print('stopFollowingUser');
   }
 
   @override
