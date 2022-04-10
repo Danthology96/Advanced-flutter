@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_app/blocs/blocs.dart';
+import 'package:maps_app/models/models.dart';
 import 'package:maps_app/themes/themes.dart';
 
 part 'map_event.dart';
@@ -36,12 +37,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<OnToggleUserRoute>(
       (event, emit) => emit(state.copyWith(showMyRoute: !state.showMyRoute)),
     );
+    on<OnCreatePolylineEvent>(
+        (event, emit) => emit(state.copyWith(polylines: event.polylines)));
   }
 
   /// params
   final LocationBloc locationBloc;
   GoogleMapController? _mapController;
   StreamSubscription<LocationState>? locationStateSub;
+  LatLng? mapCenter;
 
   /// Functions
   void _onInitMap(OnMapInitializedEvent event, Emitter<MapState> emit) {
@@ -76,6 +80,22 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     currentPolylines['myRoute'] = myRoute;
 
     emit(state.copyWith(polylines: currentPolylines));
+  }
+
+  Future drawRoutePolyline(RouteDestination destination) async {
+    final route = Polyline(
+      polylineId: const PolylineId('route'),
+      color: Colors.black,
+      width: 2,
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
+      points: destination.points,
+    );
+
+    final currentPolylines = Map<String, Polyline>.from(state.polylines);
+    currentPolylines['route'] = route;
+
+    add(OnCreatePolylineEvent(currentPolylines));
   }
 
   @override
