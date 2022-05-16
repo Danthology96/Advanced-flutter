@@ -59,10 +59,22 @@ class _CustomSearchBarBody extends StatelessWidget {
     );
   }
 
-  void onSearchResults(BuildContext context, SearchResult result) {
+  void onSearchResults(BuildContext context, SearchResult result) async {
     final searchBloc = BlocProvider.of<SearchBloc>(context);
+    final locationBloc = BlocProvider.of<LocationBloc>(context);
+    final mapBloc = BlocProvider.of<MapBloc>(context);
     if (result.manual == true) {
       searchBloc.add(OnActivateManualMarkerEvent());
+      return;
+    }
+
+    if (result.position != null) {
+      final start = locationBloc.state.lastKnownLocation!;
+
+      final destination =
+          await searchBloc.getCoordsStartToEnd(start, result.position!);
+
+      await mapBloc.drawRoutePolyline(destination);
       return;
     }
   }
